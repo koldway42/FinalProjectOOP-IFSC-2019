@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd"> 
+	<class name="project.restaurant.model.User" table="user">
+		<id column="id" name="id" type="int">
+			<generator class="native">
+		</id>
+		
+		<property name="name" column="name" type="string" />
+		<property name="email" column="email" type="string" />
+		<property name="password" column="password" type="string" />
+		<property name="createdAt" column="created_at" type="date" />
+		
+	</class>
+</hibernate-mapping>>
