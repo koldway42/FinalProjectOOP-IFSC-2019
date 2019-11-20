@@ -1,24 +1,25 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd" >
-
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+ 
 <hibernate-configuration>
     <session-factory>
-
-        <!-- database connection properties -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MariaDB103Dialect</property>
+ 
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/orderpaddb?useTimezone=true&serverTimezone=UTC</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/orderpaddb?serverTimezone=UTC</property>
         <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password"></property>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
-
-        <!-- show mysql queries output in console -->
-        <property name="hibernate.show_sql">true</property>
-
-        <!-- manage automatic database creation -->
-        <property name="hibernate.hbm2ddl.auto">create-drop</property>
-
-        <!-- add annotated resources here -->
-        <mapping class="com.memorynotfound.hibernate.DateAndTime"/>
-
+        <property name="hibernate.connection.password">050278cs</property>   
+ 
+        <property name="hibernate.current_session_context_class">org.hibernate.context.internal.ThreadLocalSessionContext</property>
+ 		
+        <property name="hibernate.hbm2ddl.auto">update</property>
+ 		
+		<property name="cache.providerclass">org.hibernate.NoCacheProvider</property>
+		
+		<mapping class="project.restaurant.model.User" />
+		<mapping class="project.restaurant.model.OrderPad" />
+		
     </session-factory>
 </hibernate-configuration>

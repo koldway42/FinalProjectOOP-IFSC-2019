@@ -1,34 +1,37 @@
 package project.restaurant.test;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneOffset;
-
 import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
+import project.restaurant.dao.OrderPadDao;
+import project.restaurant.dao.UserDao;
+import project.restaurant.model.OrderPad;
 import project.restaurant.model.User;
 
 public class TestClass {
 	public static void main(String[] args) {
 		try {
-			Session session = new Configuration().configure("/project/restaurant/resources/hibernate.cfg.xml").buildSessionFactory().openSession();
+			
 			User user = new User();
+			UserDao userDao = new UserDao();
 			
-			user.setName("Matheus Graça");
-			user.setEmail("math12125.jr@gmail.com");
-			user.setPassword("123456");
-			user.setCreatedAt(Date.valueOf(LocalDate.now()));
+			user = userDao.get(1011);
 			
-			Transaction tx = session.beginTransaction();
-			session.save(user);
-			System.out.println("Commited Succesfully");
-			tx.commit();
-			session.close();
+			OrderPad orderPad = new OrderPad();
+			OrderPadDao orderPadDao = new OrderPadDao();
+			
+			orderPad.setTotal(2500.00);
+			orderPad.setPaid(true);
+			orderPad.setCreatedAt(Date.valueOf(LocalDate.now()));
+			
+			orderPadDao.save(orderPad, user);
 			
 		} catch(Exception err) {
 			System.out.println("Erro Merda");

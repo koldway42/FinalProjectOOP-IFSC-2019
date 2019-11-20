@@ -1,13 +1,34 @@
 package project.restaurant.model;
 
 import java.sql.Date;
+import java.util.Set;
 
+import javax.persistence.*;
+
+
+@Entity
+@Table(name = "user")
 public class User {
+	@Id @GeneratedValue
+	@Column(name = "id", nullable = false, unique = true)
 	private Integer id;
+	
+	@Column(name = "name", nullable = false)
 	private String name;
+	
+	@Column(name = "email", nullable = false, unique = true)
 	private String email;
+	
+	@Column(name = "password", nullable = false)
 	private String password;
+	
+	@Column(name = "created_ad", nullable = false)
 	private Date createdAt;
+	
+	@OneToMany(mappedBy = "user", 
+			fetch = FetchType.LAZY, 
+			cascade = CascadeType.ALL)
+	private Set<OrderPad> orderPads;
 	
 	public Integer getId() {
 		return id;
@@ -39,6 +60,11 @@ public class User {
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	
+	public Set<OrderPad> getOrderPads() {
+		return orderPads;
+	}
+	public void setOrderPads(Set<OrderPad> orderPads) {
+		this.orderPads = orderPads;
+	}
 	
 }
