@@ -19,10 +19,20 @@ public class TestClass {
 	public static void main(String[] args) {
 		try {
 			
-			User user = new User();
 			UserDao userDao = new UserDao();
+			User user = userDao.get(3);
 			
-			user = userDao.get(1011);
+			
+			user.setEmail("jaozooka142@gmail.com");
+			user.setName("Joãozook");
+			user.setPassword("keiu,l4urfkiyu");
+			user.setCreatedAt(Date.valueOf(LocalDate.now()));
+			
+			//userDao.register(user);
+			
+			//System.out.println(userDao.login(user).getName());
+			
+			userDao.update(user);
 			
 			OrderPad orderPad = new OrderPad();
 			OrderPadDao orderPadDao = new OrderPadDao();

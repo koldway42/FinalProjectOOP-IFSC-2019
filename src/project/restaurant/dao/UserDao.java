@@ -35,13 +35,13 @@ public class UserDao {
 			Transaction transaction = session.beginTransaction();
 			
 			if(user.getName() == "" || user.getName() == null) 
-				throw new IllegalArgumentException("Nome n√£o informado");
+				throw new IllegalArgumentException("Nome n„o informado");
 			
 			if(user.getEmail() == "" || user.getEmail() == null) 
-				throw new IllegalArgumentException("Email n√£o informado");
+				throw new IllegalArgumentException("Email n„o informado");
 			
 			if(user.getPassword() == "" || user.getPassword() == null) 
-				throw new IllegalArgumentException("Senha n√£o informada");
+				throw new IllegalArgumentException("Senha n„o informada");
 			
 			user.setOrderPads(new HashSet<OrderPad>());
 			
@@ -49,7 +49,7 @@ public class UserDao {
 			
 			user.setPassword(encoder.encode(user.getPassword()));
 			
-			session.save(user);
+			session.persist(user);
 			transaction.commit();
 			
 		} catch(Exception err) {
@@ -90,14 +90,14 @@ public class UserDao {
 					.setParameter("email", user.getEmail())
 					.uniqueResult();
 			
-			if(userFromDB == null) throw new NotFoundException("Email n√£o encontrado");
+			if(userFromDB == null) throw new NotFoundException("Email n„o encontrado");
 			
 
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			
 			Boolean Auth = encoder.matches(user.getPassword(), userFromDB.getPassword());
 			
-			if(!Auth) throw new NotAuthorizedException("N√£o autorizado");
+			if(!Auth) throw new NotAuthorizedException("N„o autorizado");
 			
 			return userFromDB;
 			

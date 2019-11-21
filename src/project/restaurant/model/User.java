@@ -5,11 +5,14 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.GenericGenerator;
+
 
 @Entity
 @Table(name = "user")
 public class User {
-	@Id @GeneratedValue
+	@Id
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	@Column(name = "id", nullable = false, unique = true)
 	private Integer id;
 	
