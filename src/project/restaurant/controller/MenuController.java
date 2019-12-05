@@ -3,6 +3,7 @@ package project.restaurant.controller;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -17,75 +18,59 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import project.restaurant.dao.OrderPadDao;
+import project.restaurant.dao.UserDao;
+import project.restaurant.model.OrderPad;
 import project.restaurant.model.User;
+import project.restaurant.resources.ImpressoraPDF;
 
 public class MenuController implements Initializable {
 
 	private User user;
 
-	@FXML
-	private MenuItem mnoFavorecido;
+	 @FXML
+    private HBox pnlStatusBar;
 
-	@FXML
-	private MenuItem mnoTipoConta;
+    @FXML
+    private Label lblUsuario;
 
-	@FXML
-	private MenuItem mnoUsuario;
+    @FXML
+    private Label lblData;
 
-	@FXML
-	private MenuItem mnoContasPagar;
+    @FXML
+    private Label lblHora;
 
-	@FXML
-	private MenuItem mnoContasReceber;
+    @FXML
+    private Button btnNovaComanda;
 
-	@FXML
-	private MenuItem mnoSair;
+    @FXML
+    private Button btnRelatorio;
 
-	@FXML
-	private MenuItem mnoGraficoRecebimentosPagamentos;
-
-	@FXML
-	private MenuItem mnoGraficoGastosCategoria;
-
-	@FXML
-	private MenuItem mnoRelatorioContasReceber;
-
-	@FXML
-	private MenuItem mnoRelatorioContasPagar;
-
-	@FXML
-	private MenuItem mnoRelatorioUsuario;
-
-	@FXML
-	private MenuItem mnoGraficoListaUsuarioCadastroPorMes;
-
-	@FXML
-	private MenuItem mnoSobre;
-
-	@FXML
-	private HBox pnlStatusBar;
-
-	@FXML
-	private Label lblUsuario;
-
-	@FXML
-	private Label lblData;
-
-	@FXML
-	private Label lblHora;
-
+    @FXML
+    private Button btnGrafico;
+    
+    @FXML
+    private AnchorPane orderPadContainer;
+    
+    private List<OrderPad> orderPads;
+    
+    private OrderPadDao orderPadDao;
+    
 	private Stage stage;
 
 	// Configurações iniciais da tela de menu
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		this.setOrderPadDao(new OrderPadDao());
 		this.configuraBarraStatus();
 		this.configuraStage();
 	}
@@ -94,7 +79,7 @@ public class MenuController implements Initializable {
 		this.user = user;
 	}
 
-	public User getUsuario() {
+	public User getUser() {
 		return user;
 	}
 
@@ -105,10 +90,12 @@ public class MenuController implements Initializable {
 	public void setStage(Stage stage) {
 		this.stage = stage;
 	}
-
+	
+	
 	// Quando abre a tela e coloca o nome do usuário da tela de status
 	public void onShow() {
-		this.lblUsuario.setText("Usuário: " + this.getUsuario().getName());
+		this.lblUsuario.setText("Usuário: " + this.getUser().getName());
+		this.loadOrderPads();
 	}
 
 	@FXML
@@ -131,7 +118,10 @@ public class MenuController implements Initializable {
 		Optional<ButtonType> result = alert.showAndWait();
 		return result.get() == buttonTypeYES ? true : false;
 	}
-
+	
+	public void loadOrderPads() {
+		this.setOrderPads(this.getOrderPadDao().getByUserId(this.getUser().getId()));	}
+	
 	// Configura a tela inicialmente
 	public void configuraStage() {
 		this.setStage(new Stage());
@@ -151,5 +141,51 @@ public class MenuController implements Initializable {
 		clock.setCycleCount(Animation.INDEFINITE);
 		clock.play();
 	}
+	
+	 @FXML
+    void OnNewComanda(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onGrafico(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onRelatorio(ActionEvent event) {
+    	try {
+			UserLogController userLogController = new UserLogController();
+
+			ImpressoraPDF.criarArquivo(userLogController.LOG_FILE,
+			userLogController.LOG_TITLE, userLogController.LOG_HEADER,
+			userLogController.LogData());
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Informação");
+			alert.setHeaderText(null);
+			alert.setContentText("Relatório criado!\nDisponível em: " + ImpressoraPDF.caminhoRelatorio);
+			alert.showAndWait();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    }
+
+	public List<OrderPad> getOrderPads() {
+		return orderPads;
+	}
+
+	public void setOrderPads(List<OrderPad> orderPads) {
+		this.orderPads = orderPads;
+	}
+
+	public OrderPadDao getOrderPadDao() {
+		return orderPadDao;
+	}
+
+	public void setOrderPadDao(OrderPadDao orderPadDao) {
+		this.orderPadDao = orderPadDao;
+	}
+    
+    
 
 }

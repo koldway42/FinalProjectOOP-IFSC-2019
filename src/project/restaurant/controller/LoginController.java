@@ -66,7 +66,8 @@ public class LoginController implements Initializable {
 		user.setEmail(this.txtLogin.getText());
 		UserDao userDao = new UserDao();
 		try {
-			if (userDao.login(user)) {
+			user = userDao.login(user);
+			if (user.getId() != 0) {
 
 				// Carregando o arquivo da tela de menu
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/project/restaurant/view/Menu.fxml"));
@@ -110,6 +111,8 @@ public class LoginController implements Initializable {
 
 			alert.showAndWait();
 			this.txtLogin.requestFocus();
+			
+			err.printStackTrace();
 
 		}
 	}

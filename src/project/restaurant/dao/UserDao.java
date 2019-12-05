@@ -1,8 +1,12 @@
 package project.restaurant.dao;
 
 import java.security.SecureRandom;
+import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -83,7 +87,7 @@ public class UserDao {
 		return users;
 	}
 	
-	public Boolean login(User user) throws NotFoundException, NotAuthorizedException{
+	public User login(User user) throws NotFoundException, NotAuthorizedException{
 		
 		Session session = null;
 		User userFromDB = null;
@@ -104,7 +108,7 @@ public class UserDao {
 		
 		if(!Auth) throw new NotAuthorizedException("Não autorizado");
 		
-		return Auth;
+		return userFromDB;
 			
 	}
 	
@@ -173,6 +177,28 @@ public class UserDao {
 				session.close();
 			}
 		}
+	}
+	
+	public List<User> getAllLog() {
+		List<User> users = new ArrayList<User>();
+		Session session = factory.openSession();
+		
+		// Enquanto existir dados (registros) no banco de dados, recupera
+		List<User> userArray = list();
+		for(int i = 0; i < userArray.size(); i++) {
+			User userFromList = userArray.get(i);
+			User user = new User();
+			user.setId(userFromList.getId());
+			user.setName(userFromList.getName());
+			user.setEmail(userFromList.getEmail());
+			user.setCreatedAt(userFromList.getCreatedAt());
+			
+			System.out.println(user.getFormattedCreatedAt());
+			
+			users.add(user);
+		}
+	    
+		return users;
 	}
 	
 	public SessionFactory getFactory() {

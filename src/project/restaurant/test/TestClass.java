@@ -3,6 +3,7 @@ package project.restaurant.test;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -20,15 +21,6 @@ import project.restaurant.model.User;
 public class TestClass {
 	public static void main(String[] args) {
 		try {
-			UserDao userDao = new UserDao();
-			User user = new User();
-			
-			user.setName("Matheus");
-			user.setEmail("matheusgraca08@yahoo.com.br");
-			user.setPassword("050278cs");
-			
-			userDao.register(user);
-			
 		} catch(Exception err) {
 			System.out.println("Erro Merda");
 			err.printStackTrace();

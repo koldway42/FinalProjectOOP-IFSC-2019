@@ -89,6 +89,27 @@ public class OrderPadDao {
 		
 		return orderPad;
 	}
+	
+	public List<OrderPad> getByUserId(int id) {
+		Session session = null;
+		List<OrderPad> orderPads = null;
+		try {
+			session = factory.openSession();
+			
+			Query query = session.createQuery("from OrderPad where user=:id");
+			query.setParameter("id", id);
+			
+			orderPads = query.getResultList();
+					
+			
+			
+			
+		} catch(Exception err) {
+			err.printStackTrace();
+		}
+		
+		return orderPads;
+	}
 
 	public void update(OrderPad orderPad) {
 		Session session = null;

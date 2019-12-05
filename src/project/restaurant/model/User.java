@@ -1,6 +1,7 @@
 package project.restaurant.model;
 
 import java.sql.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -69,6 +70,11 @@ public class User {
 	}
 	public void setOrderPads(Set<OrderPad> orderPads) {
 		this.orderPads = orderPads;
+	}
+	
+	public String getFormattedCreatedAt() {
+		DateTimeFormatter formattedDate = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		return createdAt.toLocalDate().format(formattedDate).toString();
 	}
 	
 }
