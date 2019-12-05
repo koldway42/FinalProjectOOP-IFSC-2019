@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="500.0" prefWidth="480.0" style="-fx-background-color: #fff; -fx-border-color: #eee; -fx-border-image-width: 2;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.restaurant.controller.LoginController">
+   <children>
+      <GridPane fx:id="pnlLogin" alignment="center" hgap="10" layoutY="154.0" prefHeight="192.0" prefWidth="490.0" style="-fx-background-color: #fff;" vgap="10.0">
+      	<padding>
+      		<Insets bottom="10" left="25" right="25" top="25" />
+      	</padding>
+      
+      	<Label fx:id="lblLogin" text="Email:" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+      
+      	<TextField fx:id="txtLogin" prefHeight="25.0" prefWidth="355.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      
+      	<Label fx:id="lblSenha" text="Senha:" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+      
+      	<PasswordField fx:id="txtSenha" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      
+      	<HBox fx:id="pnlBotoes" alignment="CENTER" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      	<stylesheets>
+      		<URL value="@Login.css" />
+      	</stylesheets>
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>	
+      </GridPane>
+		<Button fx:id="btnLogin" layoutX="407.0" layoutY="416.0" onAction="#entrar" prefHeight="38.0" prefWidth="59.0" style="-fx-background-color: #3c3; -fx-text-fill: #fff;" text="Login" />
+		<Button fx:id="btnLimpar" layoutX="328.0" layoutY="416.0" mnemonicParsing="false" onAction="#limpar" prefHeight="38.0" prefWidth="59.0" style="-fx-background-color: #c33; -fx-text-fill: #fff;" text="Limpar" />
+      <Text layoutX="182.0" layoutY="80.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login">
+         <font>
+            <Font size="47.0" />
+         </font>
+      </Text>
+      <Button fx:id="btnRegister" layoutX="65.0" layoutY="416.0" mnemonicParsing="false" onAction="#OnRegister" prefHeight="38.0" prefWidth="100.0" style="-fx-background-color: #333; -fx-text-fill: #fff;" text="Registrar-se" />
+   </children>
+</AnchorPane>

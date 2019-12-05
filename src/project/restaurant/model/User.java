@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -27,10 +28,10 @@ public class User {
 	
 	@Column(name = "created_ad", nullable = false)
 	private Date createdAt;
-	
+
 	@OneToMany(mappedBy = "user", 
 			fetch = FetchType.LAZY, 
-			cascade = CascadeType.ALL)
+			cascade = CascadeType.MERGE)
 	private Set<OrderPad> orderPads;
 	
 	public Integer getId() {

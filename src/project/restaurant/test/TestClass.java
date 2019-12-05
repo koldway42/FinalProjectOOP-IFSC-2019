@@ -11,37 +11,23 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 
 import project.restaurant.dao.OrderPadDao;
+import project.restaurant.dao.ProductDao;
 import project.restaurant.dao.UserDao;
 import project.restaurant.model.OrderPad;
+import project.restaurant.model.Product;
 import project.restaurant.model.User;
 
 public class TestClass {
 	public static void main(String[] args) {
 		try {
-			
 			UserDao userDao = new UserDao();
-			User user = userDao.get(3);
+			User user = new User();
 			
+			user.setName("Matheus");
+			user.setEmail("matheusgraca08@yahoo.com.br");
+			user.setPassword("050278cs");
 			
-			user.setEmail("jaozooka142@gmail.com");
-			user.setName("Joãozook");
-			user.setPassword("keiu,l4urfkiyu");
-			user.setCreatedAt(Date.valueOf(LocalDate.now()));
-			
-			//userDao.register(user);
-			
-			//System.out.println(userDao.login(user).getName());
-			
-			userDao.update(user);
-			
-			OrderPad orderPad = new OrderPad();
-			OrderPadDao orderPadDao = new OrderPadDao();
-			
-			orderPad.setTotal(2500.00);
-			orderPad.setPaid(true);
-			orderPad.setCreatedAt(Date.valueOf(LocalDate.now()));
-			
-			orderPadDao.save(orderPad, user);
+			userDao.register(user);
 			
 		} catch(Exception err) {
 			System.out.println("Erro Merda");

@@ -11,73 +11,60 @@ import javax.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javassist.NotFoundException;
 import project.restaurant.model.OrderPad;
+import project.restaurant.model.Product;
 import project.restaurant.model.User;
 
-public class OrderPadDao {
+public class ProductDao {
 	
-	private SessionFactory factory = null;
-
-	public OrderPadDao() {
+	private SessionFactory factory;
+	
+	public ProductDao() {
 		factory = FactoryBuilerConfig.factoryBuilder();
 	}
-
-	public void save(OrderPad orderPad) {
-		UserDao userDao = new UserDao();
+	
+	public void save(Product product) {
 		try {
 			Session session = factory.openSession();
 			Transaction transaction = session.beginTransaction();
-			
-			User user = orderPad.getUser();
-			
-			Set<OrderPad> orderPads = new HashSet<OrderPad>();
-			
-			orderPads.add(orderPad);
-			
-			orderPad.setId(null);
-			orderPad.setCreatedAt(Date.valueOf(LocalDate.now()));
-			
-			user.setOrderPads(orderPads);
-			
-			orderPad.setUser(user);
+
+			session.save(product);
 			session.flush(); 
-			session.merge(orderPad);
 			transaction.commit();
 		} catch(Exception err) {
 			err.printStackTrace();
 		}
 		
 	}
-
-	public List<OrderPad> list() {
-		List<OrderPad> orderPads = null;
+	
+	public List<Product> list() {
+		
+		List<Product> products = null;
+		
 		try {
 			Session session = factory.openSession();
-			Transaction transaction = session.beginTransaction();
 			
-			Query query = session.createQuery("from OrderPad");
+			Query query = session.createQuery("from Product");
 			
-			orderPads = query.getResultList();
+			products = query.getResultList();
+			
 		} catch(Exception err) {
 			err.printStackTrace();
 		}
 		
-		return orderPads;
-		
+		return products;
 	}
-
-	public OrderPad get(int id) {
+	
+	public Product get(int id) {
 		Session session = null;
-		OrderPad orderPad = null;
+		Product product = null;
 		try {
 			session = factory.openSession();
 			
-			orderPad = (OrderPad) session.createQuery("SELECT e FROM OrderPad e WHERE e.id=:id")
+			product = (Product) session.createQuery("SELECT e FROM Product e WHERE e.id=:id")
 					.setParameter("id", id)
 					.uniqueResult();
 			
@@ -87,22 +74,24 @@ public class OrderPadDao {
 			err.printStackTrace();
 		}
 		
-		return orderPad;
+		return product;
+		
 	}
 
-	public void update(OrderPad orderPad) {
+	public void update(Product product) {
 		Session session = null;
-		OrderPad orderPadFromDB = null;
+		Product productFromDB = null;
 		try {
 			session = factory.openSession();
 			Transaction transaction = session.beginTransaction();
 			
-			orderPadFromDB = (OrderPad) session.get(OrderPad.class, orderPad.getId());
+			productFromDB = (Product) session.get(Product.class, product.getId());
 			
-			orderPadFromDB.setTotal(orderPad.getTotal());
-			orderPadFromDB.setPaid(orderPad.getPaid());;
+			productFromDB.setName(product.getName());
+			productFromDB.setPrice(product.getPrice());
 			
-			session.merge(orderPadFromDB);
+			
+			session.update(productFromDB);
 			session.flush();
 			transaction.commit();
 			
@@ -112,16 +101,16 @@ public class OrderPadDao {
 		
 	}
 
-	public void delete(OrderPad orderPad) {
+	public void delete(Product product) {
 		Session session = null;
 		try {
 			
-			if(orderPad == null) throw new NotFoundException("Comanda não encontrada!");
+			if(product == null) throw new NotFoundException("Produto não encontrada!");
 			
 			session = factory.openSession();
 			Transaction transaction = session.beginTransaction();
 			
-			session.delete(orderPad);
+			session.delete(product);
 			session.flush();
 			transaction.commit();
 		} catch(Exception err) {
@@ -131,15 +120,5 @@ public class OrderPadDao {
 				session.close();
 			}
 		}
-		
 	}
-	
-	public SessionFactory getFactory() {
-		return factory;
-	}
-
-	public void setFactory(SessionFactory factory) {
-		this.factory = factory;
-	}
-	
 }

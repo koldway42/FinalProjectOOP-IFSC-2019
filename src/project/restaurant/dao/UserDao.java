@@ -1,8 +1,12 @@
 package project.restaurant.dao;
 
 import java.security.SecureRandom;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Query;
 
@@ -28,37 +32,37 @@ public class UserDao {
 		factory = FactoryBuilerConfig.factoryBuilder();
 	}
 	
-	public void register(User user) {
+	public void register(User user) throws IllegalArgumentException{
 			Session session = null;
-		try {
 			session = factory.openSession();
 			Transaction transaction = session.beginTransaction();
 			
-			if(user.getName() == "" || user.getName() == null) 
-				throw new IllegalArgumentException("Nome n„o informado");
+			String errorMsg = "";
 			
-			if(user.getEmail() == "" || user.getEmail() == null) 
-				throw new IllegalArgumentException("Email n„o informado");
+			if(user.getName().isEmpty() || user.getName() == null) 
+				errorMsg += "Nome n„o informado \n";
 			
-			if(user.getPassword() == "" || user.getPassword() == null) 
-				throw new IllegalArgumentException("Senha n„o informada");
+			if(user.getEmail().isEmpty() || user.getEmail() == null) 
+				errorMsg += "Email n„o informado \n";
 			
-			user.setOrderPads(new HashSet<OrderPad>());
+			if(user.getPassword().isEmpty() || user.getPassword() == null) 
+				errorMsg += "Senha n„o informada \n";
+			
+			if(!errorMsg.isEmpty()) throw new IllegalArgumentException(errorMsg);
 			
 			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 			
 			user.setPassword(encoder.encode(user.getPassword()));
 			
-			session.persist(user);
+			user.setCreatedAt(Date.valueOf(LocalDate.now()));
+			
+			session.save(user);
+			session.flush();
 			transaction.commit();
 			
-		} catch(Exception err) {
-			err.printStackTrace();
-		} finally {
 			if(session != null && session.isOpen()) {
 				session.close();
 			}
-		}
 	}
 
 	public List<User> list() {
@@ -79,33 +83,29 @@ public class UserDao {
 		return users;
 	}
 	
-	public User login(User user) {
+	public Boolean login(User user) throws NotFoundException, NotAuthorizedException{
 		
 		Session session = null;
 		User userFromDB = null;
-		try {
-			session = factory.openSession();
-			
-			userFromDB = (User) session.createQuery("SELECT e FROM User e WHERE e.email=:email")
-					.setParameter("email", user.getEmail())
-					.uniqueResult();
-			
-			if(userFromDB == null) throw new NotFoundException("Email n„o encontrado");
-			
-
-			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-			
-			Boolean Auth = encoder.matches(user.getPassword(), userFromDB.getPassword());
-			
-			if(!Auth) throw new NotAuthorizedException("N„o autorizado");
-			
-			return userFromDB;
-			
-		} catch(Exception err) {
-			err.printStackTrace();
-		}
+		session = factory.openSession();
 		
-		return null;
+		System.out.println(user.getEmail());
+		
+		userFromDB = (User) session.createQuery("SELECT e FROM User e WHERE e.email=:email")
+				.setParameter("email", user.getEmail())
+				.uniqueResult();
+		
+		if(userFromDB == null) throw new NotFoundException("Email n„o encontrado");
+		
+
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		Boolean Auth = encoder.matches(user.getPassword(), userFromDB.getPassword());
+		
+		if(!Auth) throw new NotAuthorizedException("N„o autorizado");
+		
+		return Auth;
+			
 	}
 	
 	public User get(int id) {
@@ -145,7 +145,7 @@ public class UserDao {
 			userFromDB.setPassword(encoder.encode(user.getPassword()));
 			
 			session.update(userFromDB);
-			
+			session.flush();
 			transaction.commit();
 			
 		} catch(Exception err) {
@@ -155,16 +155,16 @@ public class UserDao {
 	}
 
 	public void delete(User user) {
-			Session session = null;
+		Session session = null;
 		try {
 			
-			if(user == null) throw new NotFoundException("Usu√°rio n√£o Encontrado");
+			if(user == null) throw new NotFoundException("Comanda n„o encontrada!");
 			
 			session = factory.openSession();
 			Transaction transaction = session.beginTransaction();
 			
 			session.delete(user);
-			
+			session.flush();
 			transaction.commit();
 		} catch(Exception err) {
 			err.printStackTrace();

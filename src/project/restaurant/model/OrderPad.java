@@ -1,6 +1,8 @@
 package project.restaurant.model;
 
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -9,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -29,10 +33,10 @@ public class OrderPad {
 	@Column(name = "created_at", nullable = false, unique = false)
 	private Date createdAt;
 	
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, optional = true)
+    @ManyToOne
 	@JoinColumn(name="user_id")
 	private User user;
-	
+    
 	public Integer getId() {
 		return id;
 	}
@@ -61,7 +65,8 @@ public class OrderPad {
 		return user;
 	}
 	public void setUser(User user) {
-		user = user;
-	}	
+		this.user = user;
+	}
+	
 	
 }

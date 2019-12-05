@@ -5,7 +5,7 @@
  
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
  
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/orderpaddb?serverTimezone=UTC</property>
@@ -15,6 +15,8 @@
         <property name="hibernate.current_session_context_class">org.hibernate.context.internal.ThreadLocalSessionContext</property>
  		
         <property name="hibernate.hbm2ddl.auto">update</property>
+        
+ 		<property name="show_sql">true</property>
  		
 		<property name="cache.providerclass">org.hibernate.NoCacheProvider</property>
 		
