@@ -2,8 +2,11 @@ package project.restaurant.dao;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Query;
@@ -96,7 +99,7 @@ public class OrderPadDao {
 		try {
 			session = factory.openSession();
 			
-			Query query = session.createQuery("from OrderPad where user=:id");
+			Query query = session.createQuery("from OrderPad where user.id=:id");
 			query.setParameter("id", id);
 			
 			orderPads = query.getResultList();
@@ -153,6 +156,22 @@ public class OrderPadDao {
 			}
 		}
 		
+	}
+	
+	public Map<Integer, Double> TenHighestOrderPads() {
+		Map<Integer, Double> result = new HashMap();
+		Session session = factory.openSession();
+		
+		
+		Query query = session.createQuery("from OrderPad order by Total desc").setMaxResults(10);
+
+		List<OrderPad> orderPads = query.getResultList();
+		
+		for(int i = 0; i < orderPads.size(); i++) {
+			result.put((i + 1), orderPads.get(i).getTotal());
+		}
+		
+		return result;
 	}
 	
 	public SessionFactory getFactory() {

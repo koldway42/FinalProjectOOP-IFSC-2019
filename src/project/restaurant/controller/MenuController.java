@@ -1,5 +1,6 @@
 package project.restaurant.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +12,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -24,8 +26,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 import project.restaurant.dao.OrderPadDao;
 import project.restaurant.dao.UserDao;
@@ -120,7 +125,40 @@ public class MenuController implements Initializable {
 	}
 	
 	public void loadOrderPads() {
-		this.setOrderPads(this.getOrderPadDao().getByUserId(this.getUser().getId()));	}
+		try {
+			this.setOrderPads(this.getOrderPadDao().getByUserId(this.getUser().getId()));
+			HBox orderPadOrganizer = new HBox();
+			orderPadOrganizer.setHgrow(orderPadOrganizer, Priority.ALWAYS);
+			
+			for(int i = 0; i < this.getOrderPads().size(); i++) {
+				FXMLLoader fxmlLoader = new FXMLLoader();
+				Pane orderPadCard = fxmlLoader.load(getClass().getResource("/project/restaurant/view/OrderPadCard.fxml").openStream());
+				OrderPadCardController orderPadCardController = (OrderPadCardController) fxmlLoader.getController();
+				
+				OrderPad orderPad = this.getOrderPads().get(i);
+				
+				if(orderPad.getPaid()) {
+					orderPadCard.setStyle("-fx-background-color: #3c3");
+				} else {
+					orderPadCard.setStyle("-fx-background-color: #c33");
+				}
+				
+				orderPadCardController.setOrderPad(orderPad);
+				
+				orderPadCardController.onShow();
+				
+				orderPadOrganizer.getChildren().add(orderPadCard);
+				
+			}
+			orderPadContainer.getChildren().add(orderPadOrganizer);
+			
+			
+		} catch(Exception err) {
+			err.printStackTrace();
+		}
+		
+		
+	}
 	
 	// Configura a tela inicialmente
 	public void configuraStage() {
@@ -144,12 +182,64 @@ public class MenuController implements Initializable {
 	
 	 @FXML
     void OnNewComanda(ActionEvent event) {
-
+		OrderPad orderPad = new OrderPad();
+		boolean btnConfirmarClic = this.showTelaUsuarioEditar(orderPad);
+		if (btnConfirmarClic) {
+			this.getOrderPadDao().save(orderPad);
+			this.loadOrderPads();
+		}
     }
+	 
+	 public boolean showTelaUsuarioEditar(OrderPad orderPad) {
+			try {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/project/restaurant/view/OrderPadAdd.fxml"));
+				Parent orderPadEditXML = loader.load();
+
+				// Criando uma janela e colocando o layout do xml nessa janela
+				Stage windowsOrderPadEdit = new Stage();
+				windowsOrderPadEdit.setTitle("Cadastro de usuário");
+				windowsOrderPadEdit.initModality(Modality.APPLICATION_MODAL);
+				windowsOrderPadEdit.resizableProperty().setValue(Boolean.FALSE);
+
+				Scene orderPadEditLayout = new Scene(orderPadEditXML);
+				windowsOrderPadEdit.setScene(orderPadEditLayout);
+
+				// Setando o cliente no Controller.
+				OrderPadAddController orderPadAddController = loader.getController();
+				orderPadAddController.setWindowOrderPadEdit(windowsOrderPadEdit);
+				orderPadAddController.setOrderPad(orderPad);
+				orderPadAddController.setUser(user);
+
+				// Mostra o Dialog e espera até que o usuário feche
+				windowsOrderPadEdit.showAndWait();
+
+				return orderPadAddController.isOkClick();
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return false;
+		}
 
     @FXML
     void onGrafico(ActionEvent event) {
+    	try {
+			// Carregando o arquivo da tela de usuario
+			FXMLLoader loader = new FXMLLoader(
+					getClass().getResource("/project/restaurant/view/TenMostExpensiveOrderPadsGraph.fxml"));
+			Parent orderPadGraficoXML = loader.load();
 
+			// Carregando a classe de controle do arquivo da tela de login
+			TenMostExpensiveOrderPadsGraphController tenMostExpensiveOrderPadsGraphController = loader.getController();
+			Scene orderPadListLayout = new Scene(orderPadGraficoXML);
+
+			this.getStage().setScene(orderPadListLayout);
+			this.getStage().setTitle("Gráfico");
+
+			this.getStage().show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
     @FXML

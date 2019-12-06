@@ -21,6 +21,8 @@ import project.restaurant.model.User;
 public class TestClass {
 	public static void main(String[] args) {
 		try {
+			OrderPadDao orderPadDao = new OrderPadDao();
+			System.out.println(orderPadDao.TenHighestOrderPads().get(1));
 		} catch(Exception err) {
 			System.out.println("Erro Merda");
 			err.printStackTrace();

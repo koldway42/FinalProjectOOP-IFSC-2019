@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.restaurant.controller.OrderPadCardController">
+   <children>
+      <BorderPane prefHeight="173.0" prefWidth="147.0" style="-fx-border-color: #ccc; -fx-border-width: 4;">
+         <top>
+            <Text fx:id="lblCardHeader" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="OrderPad #1" textAlignment="CENTER" wrappingWidth="119.13671875" BorderPane.alignment="CENTER" />
+         </top>
+         <center>
+            <Text fx:id="lblCardBody" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Price: R$450.00" textAlignment="CENTER" wrappingWidth="115.21875" BorderPane.alignment="CENTER" />
+         </center>
+         <bottom>
+            <Text fx:id="lblCardFooter" fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="05/08/2002" BorderPane.alignment="CENTER" />
+         </bottom>
+      </BorderPane>
+   </children>
+</AnchorPane>
